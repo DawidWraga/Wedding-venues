@@ -53,8 +53,9 @@
 								type="number"
 								name="partySize"
 								id="partySize"
-								value="1"
+								value="2"
 								min="1"
+								required
 							/>
 						</div>
 						<div class="col">
@@ -67,6 +68,7 @@
 								placeholder="1-5"
 								min="1"
 								max="5"
+								required
 							/>
 						</div>
 						<div class="col">
@@ -76,6 +78,7 @@
 								id="checkin"
 								name="checkin"
 								value="2022-01-01"
+								required
 							/>
 						</div>
 						<div class="col">
@@ -85,7 +88,9 @@
 								id="checkout"
 								name="checkout"
 								value="2022-01-10"
+								required
 							/>
+						</div>
 						</div>
 					</div>
 					<div
@@ -116,13 +121,13 @@
 				class="row container-fluid justify-content-center px-0"
 			></section>
 		</main>
-		<footer class="container-fluid">sample text</footer>
+		<footer class="container-fluid"></footer>
 
 		<!-- ###### Card template ######  -->
 
 		<template id="venueCard">
 			<div class="card border border-1 shadow">
-				<div class="img-and-name position-relative img-container mt-1">
+				<div class="img-and-name position-relative img-container">
 					<img class="card-img-top" />
 					<div class="card-name-container container-fluid py-2">
 						<p
@@ -201,8 +206,9 @@
 							class="container row text-nowrap justify-content-between align-content-center"
 						>
 							<!-- DESCRIPTION -->
-							<div class="description col text-end d-flex">
-								<p class="m-auto">Display mode:</p>
+							<div class="description col d-flex"
+							style="max-width: 40%;">
+								<p >Display mode:</p>
 							</div>
 
 							<!-- INPUTS -->
@@ -230,29 +236,93 @@
 										Cards
 									</label>
 								</div>
+
+
 							</div>
 						</div>
 
-						<!-- -----------AUTO UPDATE------------ -->
+							<!-- -----------SORT BY------------ -->
 
-						<div
-							class="form-check form-switch mx-auto"
-							style="width: 60% !important"
+							<!-- DROP DOWN -->
+							<div
+							id="displayModeRadios"
+							class="container row text-nowrap justify-content-between align-content-center position-relative"
+							style="left:7px"
 						>
-							<label class="form-check-label text-nowrap" for="autoUpdateToggle"
-								>Toggle auto update</label
-							>
+						<div class="dropdown col w-25 d-flex justify-content-center" id="sortByContainer">
+							<button
+								class="btn btn-outline-secondary dropdown-toggle mx-2 fw-bold"
+								type="button"
+								id="sortByDropdown"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+								style = "padding: .5rem .2rem; min-width: 140px;"
+							>		Sort by  </button>
+							<ul class="dropdown-menu " aria-labelledby="sortByDropdown">
+								<li><a class="dropdown-item" href="#">Popularity Rank</a></li>
+								<li><a class="dropdown-item" href="#">Popularity</a></li>
+								<li><a class="dropdown-item" href="#">Weekend price</a></li>
+								<li><a class="dropdown-item" href="#">Weekday price</a></li>
+								<li><a class="dropdown-item" href="#">Catering price</a></li>
+								<li><a class="dropdown-item" href="#">Capacity</a></li>
+								<li><a class="dropdown-item" href="#">Available days</a></li>
+							</ul>
+					</div>
+
+					<!-- RADIO BUTTONS (ASC/ DESC)  -->
+
+					<div class="inputs col d-flex justify-content-evenly position-relative" style="left:1rem">
+						<div class="form-check m-2">
 							<input
 								class="form-check-input"
-								type="checkbox"
-								id="autoUpdateToggle"
+								type="radio"
+								name="sortOrder"
+								id="sortASC"
+								checked
+
 							/>
+							<label class="form-check-label" for="sortASC">
+								Low first
+							</label>
+						</div>
+						<div class="form-check m-2 ">
+							<input
+								class="form-check-input"
+								type="radio"
+								name="sortOrder"
+								id="sortDESC"
+							/>
+							<label class="form-check-label" for="sortDESC">
+								High first
+							</label>
 						</div>
 					</div>
+
+				</div>
+			</div>
+	
+					
+
+
+						<!-- -----------AUTO UPDATE------------ -->
+						
+	
+				<div
+				class="form-check form-switch mx-auto mb-4 row fs-5"
+				>
+					<label class="form-check-label text-nowrap" for="autoUpdateToggle">Toggle auto update</label>
+					<input
+						class="form-check-input"
+						type="checkbox"
+						id="autoUpdateToggle"
+						/>
+				</div>
+
+
+
+
 				</div>
 			</div>
 		</div>
-
-
 	</body>
 </html>

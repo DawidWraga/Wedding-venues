@@ -204,6 +204,7 @@ h1 {
 
 .card .img-container {
 	height: 30%;
+	max-height: 230px;
 	width: 100%;
 	overflow: hidden;
 }
@@ -225,10 +226,14 @@ h1 {
 
 .cards-container {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
 	justify-items: stretch;
 	column-gap: 0.5rem;
 	row-gap: 5px;
+}
+
+.cards-container > * {
+	max-width: 550px;
 }
 
 .bookNowBtn:hover {

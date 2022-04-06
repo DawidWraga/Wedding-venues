@@ -1,6 +1,8 @@
 let data;
-
+const sortby = { order: 'ASC', col: 'popularity_rank' };
+let displayMode = 'cards';
 let cardTemplate;
+
 window.onload = () => {
 	cardTemplate = document.querySelector('template');
 };
@@ -16,7 +18,21 @@ const sqlFormatDate = (date) => date.toISOString().split('T')[0];
 // conditional formatting of plural words eg day => days
 const sCheck = (num) => (num > 1 ? 's' : '');
 
+function formatDisplayString(text) {
+	return text[0].toUpperCase() + text.slice(1).replaceAll('_', ' ');
+}
+
 // ################### DATES ##################
+
+// Check in / checkout input validation
+const checkin = document.getElementById('checkin');
+const checkout = document.getElementById('checkout');
+
+checkin.valueAsDate = new Date();
+checkout.valueAsDate = new Date(new Date().setDate(new Date().getDate() + 7));
+
+checkout.min = checkin.value;
+checkin.onchange = (ev) => (checkout.min = ev.target.value);
 
 function getCheckinDates() {
 	let checkin = document.getElementById('checkin').valueAsDate;
@@ -37,29 +53,39 @@ function getCheckinDates() {
 	return dates;
 }
 
-// function countWeekdays(dates) {
-// 	let count = 0;
-// 	dates.forEach((date) => {
-// 		let day = date.getDay();
-// 		if (0 != day && day != 6) count++;
-// 	});
-// 	return count;
-// }
-
-// function countWeekends(dates) {
-// 	let count = 0;
-// 	dates.forEach((date) => {
-// 		let day = date.getDay();
-// 		if (0 == day || day == 6) count++;
-// 	});
-// 	return count;
-// }
-
 //################### DATABASE ##################
 
-async function queryDB(query) {
+async function getVenueData() {
+	let cateringGrade = document.getElementById('catering').value;
+	let partySizeHTML = document.getElementById('partySize');
+	let partySize = partySizeHTML.value;
+	let checkout = sqlFormatDate(document.getElementById('checkout').valueAsDate);
+	let checkin = sqlFormatDate(document.getElementById('checkin').valueAsDate);
+
+	// input validation
+	// (extends html validation to ensure functionality when using auto-update ie no submit)
+	if (+partySize < 1) {
+		partySizeHTML.value = 1;
+		return alert(`invalid input for party size: must be number over 1`);
+	}
+
+	if (+cateringGrade < 1 || +cateringGrade > 5) {
+		document.getElementById('catering').value = 1;
+		return alert(`invalid input for catering grade: Must be between 1 and 5.`);
+	}
+
+	if (new Date(checkin) > new Date(checkout)) {
+		document.getElementById('checkin').valueAsDate =
+			document.getElementById('checkout').valueAsDate;
+		return alert(
+			`invalid input for date range: start range must be before end range`
+		);
+	}
+
 	try {
-		const response = await fetch(`get-data.php?q=${query}`);
+		const response = await fetch(
+			`get-venue-details.php?checkin=${checkin}&checkout=${checkout}&partySize=${partySize}&cateringGrade=${cateringGrade}`
+		);
 		if (!response.ok) {
 			throw new Error('HTTP Error: ', response.status);
 		}
@@ -70,63 +96,28 @@ async function queryDB(query) {
 	}
 }
 
-async function getVenueData() {
-	const cateringGrade = document.getElementById('catering').value;
-	const partySizeHTML = document.getElementById('partySize');
-	const partySize = partySizeHTML.value;
-	let checkin = sqlFormatDate(document.getElementById('checkin').valueAsDate);
-	let checkout = sqlFormatDate(document.getElementById('checkout').valueAsDate);
-	const checkinDates = getCheckinDates();
-
-	const query = `
-		SELECT name, weekend_price, weekday_price, catering.cost AS catering_price, capacity, IF(venue.licensed, 'Yes', 'No') AS licensed, available_days, popularity, popularity_rank  
-		FROM venue
-		INNER JOIN catering ON venue.venue_id=catering.venue_id
-		INNER JOIN (
-	  	SELECT DISTINCT ${checkinDates.length}-COUNT(booking_date) AS available_days, venue_id
-			FROM venue_booking
-			WHERE booking_date BETWEEN '${checkin}' AND '${checkout}'
-	    GROUP BY venue_id
-			) avail ON avail.venue_id=catering.venue_id
-		INNER JOIN (
-			SELECT a.venue_id, a.pop AS popularity, COUNT(*) AS popularity_rank 
-			FROM (SELECT venue_id, count(booking_date) AS pop 
-					 FROM venue_booking 
-					 GROUP BY venue_id) a 
-			JOIN (SELECT venue_id, COUNT(booking_date) AS pop 
-						FROM venue_booking 
-					 GROUP BY venue_id) b ON a.pop<b.pop 
-			GROUP BY a.venue_id 
-			) pr ON avail.venue_id=pr.venue_id 
-		WHERE venue.capacity >= ${partySize} AND grade=${cateringGrade}
-		GROUP BY name, capacity, licensed, catering_price, venue.venue_id;
-	`.replaceAll(/\n|\t/g, ' ');
-
-	let venues = await queryDB(query);
-	return venues;
-}
-
 async function getVenueBookings(name) {
 	let checkin = sqlFormatDate(document.getElementById('checkin').valueAsDate);
 	let checkout = sqlFormatDate(document.getElementById('checkout').valueAsDate);
 
-	const query = `
-	SELECT booking_date as date 
-	FROM venue v 
-	JOIN venue_booking vb on v.venue_id=vb.venue_id 
-	WHERE 
-		booking_date BETWEEN '${checkin}' and '${checkout}' 
-    and name='${name}';
-	`;
-
-	let bookedDates = await queryDB(query);
-	// transform array of objects into array of dates
-	return bookedDates.map(({ date }) => new Date(date));
+	try {
+		const response = await fetch(
+			`get-venue-bookings.php?checkin=${checkin}&checkout=${checkout}&name=${name}`
+		);
+		if (!response.ok) {
+			throw new Error('HTTP Error: ', response.status);
+		}
+		let bookedDates = await response.json();
+		// transform array of objects into array of dates
+		return bookedDates.map(({ date }) => new Date(date));
+	} catch (err) {
+		console.error(err);
+	}
 }
 
 // ################### RESULTS ##################
 
-// COMPONENTS
+// BOOK NOW MODAL COMPONENTS
 
 async function createDateSelectionHTML(name) {
 	function formatDate(date) {
@@ -154,7 +145,7 @@ ${date.toLocaleString('en', { weekday: 'long' })}`;
   	<input class="form-check-input" style="margin-top: 0.7rem;" type="checkbox" id="${date}" ${conditionalDisabled}>
   	<label class="form-check-label" for="${date}">
     ${date}</label>
-		`.replace(/\n|\t/, '');
+		`.replaceAll(/\n|\t/g, '');
 
 		formHTML.appendChild(checkboxHTML);
 	});
@@ -201,12 +192,13 @@ async function changeBookingDetailsModal(name) {
 
 		// PRICE VALUES
 		let p = {
-			catering: catering_price * daysCount,
+			catering: catering_price * daysCount * partySize,
 			weekdays: weekday_price * weekdayCount,
 			weekends: weekend_price * weekendCount,
 		};
-		p.perPerson = p.catering + p.weekdays + p.weekends;
-		p.total = p.perPerson * partySize;
+
+		p.total = p.catering + p.weekdays + p.weekends;
+		p.perPerson = p.total / partySize;
 
 		// PRICE HTML
 		const weekendPriceHTML =
@@ -224,26 +216,26 @@ async function changeBookingDetailsModal(name) {
 		const pricePerPersonHTML =
 			partySize <= 1
 				? ''
-				: `<h5>Total price per person:</h5>
-			<h5 class="text-end">£${numberWithCommas(p.perPerson)}</h5>
+				: `<h5 class="mx-4 position-relative" style="right:22px">Total price per person:</h5>
+			<h5 class="text-end mx-4">£${numberWithCommas(p.perPerson)}</h5>
 		`;
 
 		// COMPLETE PRICES STRING
 		const priceString = `
 		<div class="price-grid py-3 px-md-4">
-			<h5>Catering for ${daysCount} days:</h5>
+			<h5 >Catering for ${daysCount} days:</h5>
 			<h5 class="text-end">£${numberWithCommas(catering_price * daysCount)}</h5>
 			${weekendPriceHTML}
 			${weekdayPriceHTML}
-			${pricePerPersonHTML}
 		</div>
-		<div class="d-flex justify-content-center text-center mt-3">
+		<div class="d-flex justify-content-center text-center mt-3 flex-wrap">
 			<h4 class="col fw-bold fs-5 ms-4">
 				Total price for ${partySize} Guest${sCheck(partySize)}:
 			</h4>
 			<h4 class="col fw-bold fs-5">£${numberWithCommas(p.total)}</h4>
+			${pricePerPersonHTML}
 		</div>
-	`.replace(/\n|\t/, '');
+	`.replaceAll(/\n|\t/g, '');
 
 		// add
 		const pricesHTML = document.createElement('div');
@@ -264,10 +256,6 @@ function createBookNowButton() {
 
 // RENDER VENUE
 
-function formatDisplayString(text) {
-	return text[0].toUpperCase() + text.slice(1).replace('_', ' ');
-}
-
 async function renderCards() {
 	const cardTemplate = document.getElementById('venueCard');
 	const results = document.getElementById('result');
@@ -275,6 +263,7 @@ async function renderCards() {
 
 	const cardsContainerHTML = document.createElement('div');
 	cardsContainerHTML.classList.add('cards-container');
+	// if (!data) return;
 	data.forEach((venue) => {
 		const cardHTML = document.importNode(cardTemplate.content, true);
 
@@ -303,6 +292,7 @@ async function renderCards() {
 		cardHTML.querySelector('.bookNowBtn').addEventListener('click', (ev) => {
 			const cardHTML = ev.target.parentNode;
 			const name = cardHTML.querySelector('.card-name').innerHTML;
+			console.log(name);
 			changeBookingDetailsModal(name);
 		});
 
@@ -311,8 +301,10 @@ async function renderCards() {
 	results.appendChild(cardsContainerHTML);
 }
 
-// TODO: CSS based alternating rows
-let rowType = 'rowB';
+const inverseOrder = () => {
+	sortby.order = sortby.order === 'ASC' ? 'DESC' : 'ASC';
+};
+
 function renderTable(data) {
 	const resultHTML = document.getElementById('result');
 	resultHTML.innerHTML = '';
@@ -325,7 +317,17 @@ function renderTable(data) {
 			for (let col in venue) {
 				colHTML = document.createElement('th');
 				colHTML.innerHTML = formatDisplayString(col);
-				colHTML.addEventListener('dblclick', sortDataByColAndRender);
+				colHTML.addEventListener('dblclick', (ev) => {
+					const inputCol = ev.target.innerText
+						.replaceAll(' ', '_')
+						.toLowerCase();
+
+					if (sortby.col === inputCol) inverseOrder();
+					else sortby.col = inputCol;
+
+					sortDataByCol();
+					conditionalRender(data);
+				});
 				firstRowHTML.appendChild(colHTML);
 			}
 			tableHTML.appendChild(firstRowHTML);
@@ -335,10 +337,9 @@ function renderTable(data) {
 		const rowHTML = document.createElement('tr');
 
 		for (let [col, cell] of Object.entries(venue)) {
-			if (col.includes('price')) cell = '£' + cell;
 			const cellHTML = document.createElement('td');
 
-			// name and btn
+			// NAME col
 			if (col === 'name') {
 				cellHTML.classList.add(
 					'd-flex',
@@ -352,8 +353,9 @@ function renderTable(data) {
 				btnHTML.onclick = () => changeBookingDetailsModal(cell);
 				cellHTML.append(btnHTML);
 
-				// data cols
+				// DATA cols
 			} else {
+				if (col.includes('price')) cell = '£' + cell;
 				cellHTML.innerHTML = numberWithCommas(cell);
 			}
 			rowHTML.appendChild(cellHTML);
@@ -373,15 +375,22 @@ function renderTable(data) {
 
 // Switch display modes
 
-let displayMode = 'cards';
-
 document.getElementById('showTable').onclick = () => (displayMode = 'table');
 document.getElementById('showCards').onclick = () => (displayMode = 'cards');
 
-async function getVenueDataAndRender() {
-	data = await getVenueData();
+function conditionalRender(data) {
 	if (displayMode === 'table') renderTable(data);
 	if (displayMode === 'cards') renderCards(data);
+}
+
+async function getVenueDataAndRender() {
+	// data = await getVenueData();
+
+	const newData = await getVenueData();
+	if (newData !== undefined) data = newData;
+	if (!data) return;
+	sortDataByCol();
+	conditionalRender(data);
 }
 
 document.querySelector('form').addEventListener('submit', (ev) => {
@@ -393,32 +402,33 @@ document.querySelector('form').addEventListener('submit', (ev) => {
 
 // SORTING DATA
 
-const sortby = { order: '', col: '' };
+const sortByContainer = document.getElementById('sortByContainer');
 
-// TODO: remove redundant regex
-function sortDataByColAndRender(ev) {
-	const col = ev.target.innerText.replace(' ', '_').toLowerCase();
-	beforeSpace = /[^ ]*/;
+sortByContainer.querySelectorAll('a').forEach((item) => {
+	item.addEventListener('click', (ev) => {
+		sortby.col = ev.target.innerText.replaceAll(' ', '_').toLowerCase();
+		sortDataByCol();
 
-	if (sortby.col === col) {
-		// swap order
-		if (sortby.order === 'DESC') {
-			sortby.order = 'ASC';
-			data.sort(
-				(a, b) => a[col].match(beforeSpace) - b[col].match(beforeSpace)
-			);
-		} else if (sortby.order === 'ASC') {
-			sortby.order = 'DESC';
-			data.sort(
-				(a, b) => b[col].match(beforeSpace) - a[col].match(beforeSpace)
-			);
-		}
-	} else {
-		sortby.col = col;
-		sortby.order = 'DESC';
-		data.sort((a, b) => b[col].match(beforeSpace) - a[col].match(beforeSpace));
-	}
-	renderTable(data);
+		sortByContainer.querySelector('button').innerHTML = ev.target.innerHTML;
+		conditionalRender(data);
+	});
+});
+
+document.getElementById('sortASC').onclick = () => {
+	sortby.order = 'ASC';
+	conditionalRender(data);
+};
+
+document.getElementById('sortDESC').onclick = () => {
+	sortby.order = 'DESC';
+	conditionalRender(data);
+};
+
+function sortDataByCol() {
+	if (!data) return;
+	const { col, order } = sortby;
+	if (order === 'ASC') data.sort((a, b) => a[col] - b[col]);
+	if (order === 'DESC') data.sort((a, b) => b[col] - a[col]);
 }
 
 // AUTO-UPDATE
@@ -445,44 +455,4 @@ document.getElementById('autoUpdateToggle').addEventListener('click', (ev) => {
 		});
 		localStorage.setItem('autoUpdate', false);
 	}
-});
-
-// Check in / checkout input validation
-
-document.getElementById('checkin').addEventListener('change', (ev) => {
-	const checkout = document.getElementById('checkout');
-	if (ev.target.valueAsDate > checkout.valueAsDate) {
-		alert('Invalid input: check in date must be BEFORE check out date.');
-		ev.target.value = checkout.value;
-	}
-});
-
-document.getElementById('checkout').addEventListener('change', (ev) => {
-	const checkin = document.getElementById('checkin');
-	if (ev.target.valueAsDate < checkin.valueAsDate) {
-		alert('Invalid input: check out date must be AFTER check out date.');
-		ev.target.value = checkin.value;
-	}
-});
-
-// save query
-
-document.getElementById('save').addEventListener('click', (ev) => {
-	ev.preventDefault();
-	const query = {};
-	document.querySelectorAll('input').forEach((inputHTML) => {
-		query[inputHTML.name] = inputHTML.value;
-	});
-	localStorage.setItem('savedQuery', JSON.stringify(query));
-});
-
-// load query
-
-document.getElementById('load').addEventListener('click', (ev) => {
-	ev.preventDefault();
-	let savedQuery = JSON.parse(localStorage.getItem('savedQuery'));
-	for (const [name, value] of Object.entries(savedQuery)) {
-		document.querySelector(`input[name=${name}]`).value = value;
-	}
-	getVenueDataAndRender();
 });
