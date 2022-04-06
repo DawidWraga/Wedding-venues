@@ -200,6 +200,8 @@ h1 {
 
 .card {
 	max-height: 840px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .card .img-container {

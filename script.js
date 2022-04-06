@@ -75,13 +75,16 @@ async function getVenueData() {
 	}
 
 	if (new Date(checkin) > new Date(checkout)) {
-		document.getElementById('checkin').valueAsDate =
-			document.getElementById('checkout').valueAsDate;
+		const checkin = document.getElementById('checkin');
+		const checkout = document.getElementById('checkout');
+		checkin.valueAsDate = checkout.valueAsDate;
+		checkout.min = sqlFormatDate(checkin.valueAsDate);
 		return alert(
 			`invalid input for date range: start range must be before end range`
 		);
 	}
 
+	// get data
 	try {
 		const response = await fetch(
 			`get-venue-details.php?checkin=${checkin}&checkout=${checkout}&partySize=${partySize}&cateringGrade=${cateringGrade}`
@@ -228,7 +231,7 @@ async function changeBookingDetailsModal(name) {
 			${weekendPriceHTML}
 			${weekdayPriceHTML}
 		</div>
-		<div class="d-flex justify-content-center text-center mt-3 flex-wrap">
+		<div class="price-grid py-3 d-flex justify-content-center text-center mt-3 flex-wrap">
 			<h4 class="col fw-bold fs-5 ms-4">
 				Total price for ${partySize} Guest${sCheck(partySize)}:
 			</h4>
@@ -379,16 +382,22 @@ document.getElementById('showTable').onclick = () => (displayMode = 'table');
 document.getElementById('showCards').onclick = () => (displayMode = 'cards');
 
 function conditionalRender(data) {
+	if (!data.length) {
+		console.log('test');
+		document.getElementById(
+			'result'
+		).innerHTML = `<p class="text-center fs-5">no results to show. Please change the search input and try again.</p>`;
+		return;
+	}
 	if (displayMode === 'table') renderTable(data);
 	if (displayMode === 'cards') renderCards(data);
 }
 
 async function getVenueDataAndRender() {
-	// data = await getVenueData();
-
 	const newData = await getVenueData();
+	// prevent invalid input from changing data
 	if (newData !== undefined) data = newData;
-	if (!data) return;
+	else data = await getVenueData();
 	sortDataByCol();
 	conditionalRender(data);
 }

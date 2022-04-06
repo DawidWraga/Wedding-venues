@@ -38,7 +38,7 @@ INNER JOIN (
        GROUP BY venue_id) b ON a.pop<b.pop 
   GROUP BY a.venue_id 
   ) pr ON avail.venue_id=pr.venue_id 
-WHERE venue.capacity >= $partySize AND grade=$cateringGrade
+WHERE venue.capacity >= $partySize AND grade=$cateringGrade AND available_days > 0
 GROUP BY name, capacity, licensed, catering_price, venue.venue_id;
 ";
 
