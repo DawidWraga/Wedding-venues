@@ -348,7 +348,7 @@ async function renderCards() {
 					${col.includes('price') ? '£' : ''}${numberWithCommas(cell)}
 					${
 						col === 'catering_price'
-							? '<a href="#" class="ppToolTip text-decoration-none text-white" data-bs-toggle="tooltip" title="per person ASD">pp</a>'
+							? '<a href="#" class="ppToolTip text-decoration-none text-black" data-bs-toggle="tooltip" title="per person ASD">pp</a>'
 							: ''
 					}
 					${col === 'capacity' ? 'people' : ''}
