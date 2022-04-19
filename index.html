@@ -34,7 +34,7 @@
 		<!-- ###### Header ######  -->
 		<header>
 			<h1
-				class="container-fluid text-center py-3 m-0 mb-lg-2 display-5 text-white bg-brand p"
+				class="container-fluid text-center py-3 m-0 mb-lg-2 display-5 text-white bg-brand"
 			>
 				Dawid's Wedding Services
 			</h1>
@@ -44,12 +44,12 @@
 
 			<section id="top" class="row py-3 mb-3">
 				<form
-					class="col-9 col-md-8 col-lg-6 py-2 m-auto justify-content-center my-4 shadow rounded-3 p"
+					class="col-9 col-md-8 col-lg-6 py-2 m-auto justify-content-center my-4 shadow rounded-3 px-3 px-md-5" 
 				>
 					<div class="container-fluid px-0 align-content-center">
-						<div class="col">
-							<label for="partySize">Party Size:</label>
-							<input
+						<div class="row">
+							<label class="col" for="partySize">Party Size:</label>
+							<input class="col"
 								type="number"
 								name="partySize"
 								id="partySize"
@@ -58,9 +58,9 @@
 								required
 							/>
 						</div>
-						<div class="col">
-							<label for="catering">Catering band:</label>
-							<input
+						<div class="row">
+							<label class="col" for="catering">Catering band:</label>
+							<input class="col"
 								type="number"
 								name="catering"
 								id="catering"
@@ -71,9 +71,9 @@
 								required
 							/>
 						</div>
-						<div class="col">
-							<label for="checkin">Search from:</label>
-							<input
+						<div class="row">
+							<label class="col" for="checkin">Search from:</label>
+							<input class="col"
 								type="Date"
 								id="checkin"
 								name="checkin"
@@ -81,9 +81,9 @@
 								required
 							/>
 						</div>
-						<div class="col">
-							<label for="checkout">Search until:</label>
-							<input
+						<div class="row">
+							<label class="col" for="checkout">Search until:</label>
+							<input class="col"
 								type="Date"
 								id="checkout"
 								name="checkout"
@@ -118,7 +118,7 @@
 			<!-- ###### Result ######  -->
 			<section
 				id="result"
-				class="row container-fluid justify-content-center px-0"
+				class="row container-fluid justify-content-center px-0 position-relative"
 			></section>
 		</main>
 		<footer class="container-fluid"></footer>
@@ -128,10 +128,19 @@
 		<template id="venueCard">
 			<div class="card border border-1 shadow">
 				<div class="img-and-name position-relative img-container">
+					<a class="verified-icon-container position-absolute" style="top:5px; right:5px; " href="#" data-bs-toggle="tooltip" 
+					title="Licensed">
+						<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="var(--brand)" class="bi bi-patch-check-fill" viewBox="-1 -1 18 18" stroke="white" stroke-width=".5" >
+							<rect x="5" height="6" y="5" width="6" style="fill: white;"/>
+
+							<path  d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
+
+						</svg>
+					</a>
 					<img class="card-img-top" />
 					<div class="card-name-container container-fluid py-2">
 						<p
-							class="card-name text-center text-nowrap fs-4 fw-bold text-white mb-0"
+							class="card-name text-center text-nowrap fs-4 fw-bold text-white mb-0 d-flex justify-content-center"
 						>
 							Venue Name
 						</p>
@@ -140,11 +149,11 @@
 				<ul class="list-group list-group-flush card-body text-nowrap pb-0"></ul>
 				<button
 					type="button"
-					class="btn py-2 bg-brand fw-bold m-1 text-white bookNowBtn fs-5"
+					class="btn py-2 bg-brand fw-bold m-1 text-white bookNowBtn fs-6"
 					data-bs-toggle="modal"
 					data-bs-target="#bookModal"
 				>
-					Book Now
+					Check Available Days
 				</button>
 			</div>
 		</template>
@@ -206,9 +215,8 @@
 							class="container row text-nowrap justify-content-between align-content-center"
 						>
 							<!-- DESCRIPTION -->
-							<div class="description col d-flex"
-							style="max-width: 40%;">
-								<p >Display mode:</p>
+							<div class="description col d-flex mx-auto" style="max-width: 40%">
+								<p class="my-auto text-center">Display mode:</p>
 							</div>
 
 							<!-- INPUTS -->
@@ -236,91 +244,87 @@
 										Cards
 									</label>
 								</div>
-
-
 							</div>
 						</div>
 
-							<!-- -----------SORT BY------------ -->
+						<!-- -----------SORT BY------------ -->
 
-							<!-- DROP DOWN -->
-							<div
+						<!-- DROP DOWN -->
+						<div
 							id="displayModeRadios"
 							class="container row text-nowrap justify-content-between align-content-center position-relative"
-							style="left:7px"
+							style="left: 7px"
 						>
-						<div class="dropdown col w-25 d-flex justify-content-center" id="sortByContainer">
-							<button
-								class="btn btn-outline-secondary dropdown-toggle mx-2 fw-bold"
-								type="button"
-								id="sortByDropdown"
-								data-bs-toggle="dropdown"
-								aria-expanded="false"
-								style = "padding: .5rem .2rem; min-width: 140px;"
-							>		Sort by  </button>
-							<ul class="dropdown-menu " aria-labelledby="sortByDropdown">
-								<li><a class="dropdown-item" href="#">Popularity Rank</a></li>
-								<li><a class="dropdown-item" href="#">Popularity</a></li>
-								<li><a class="dropdown-item" href="#">Weekend price</a></li>
-								<li><a class="dropdown-item" href="#">Weekday price</a></li>
-								<li><a class="dropdown-item" href="#">Catering price</a></li>
-								<li><a class="dropdown-item" href="#">Capacity</a></li>
-								<li><a class="dropdown-item" href="#">Available days</a></li>
-							</ul>
+							<div
+								class="dropdown col w-25 d-flex justify-content-center"
+								id="sortByContainer"
+							>
+								<button
+									class="btn btn-outline-secondary dropdown-toggle mx-2 fw-bold"
+									type="button"
+									id="sortByDropdown"
+									data-bs-toggle="dropdown"
+									aria-expanded="false"
+									style="padding: 0.5rem 0.2rem; min-width: 140px"
+								>
+									Sort by
+								</button>
+								<ul class="dropdown-menu" aria-labelledby="sortByDropdown">
+									<li><a class="dropdown-item" href="#">Popularity Rank</a></li>
+									<li><a class="dropdown-item" href="#">Popularity</a></li>
+									<li><a class="dropdown-item" href="#">Weekend price</a></li>
+									<li><a class="dropdown-item" href="#">Weekday price</a></li>
+									<li><a class="dropdown-item" href="#">Catering price</a></li>
+									<li><a class="dropdown-item" href="#">Capacity</a></li>
+									<li><a class="dropdown-item" href="#">Available days</a></li>
+								</ul>
+							</div>
+
+							<!-- RADIO BUTTONS (ASC/ DESC)  -->
+
+							<div
+								class="inputs col d-flex justify-content-evenly position-relative"
+								style="left: 1rem"
+							>
+								<div class="form-check m-2">
+									<input
+										class="form-check-input"
+										type="radio"
+										name="sortOrder"
+										id="sortASC"
+										checked
+									/>
+									<label class="form-check-label" for="sortASC">
+										Low first
+									</label>
+								</div>
+								<div class="form-check m-2">
+									<input
+										class="form-check-input"
+										type="radio"
+										name="sortOrder"
+										id="sortDESC"
+									/>
+									<label class="form-check-label" for="sortDESC">
+										High first
+									</label>
+								</div>
+							</div>
+						</div>
 					</div>
 
-					<!-- RADIO BUTTONS (ASC/ DESC)  -->
+					<!-- -----------AUTO UPDATE------------ -->
 
-					<div class="inputs col d-flex justify-content-evenly position-relative" style="left:1rem">
-						<div class="form-check m-2">
-							<input
-								class="form-check-input"
-								type="radio"
-								name="sortOrder"
-								id="sortASC"
-								checked
-
-							/>
-							<label class="form-check-label" for="sortASC">
-								Low first
-							</label>
-						</div>
-						<div class="form-check m-2 ">
-							<input
-								class="form-check-input"
-								type="radio"
-								name="sortOrder"
-								id="sortDESC"
-							/>
-							<label class="form-check-label" for="sortDESC">
-								High first
-							</label>
-						</div>
-					</div>
-
-				</div>
-			</div>
-	
-					
-
-
-						<!-- -----------AUTO UPDATE------------ -->
-						
-	
-				<div
-				class="form-check form-switch mx-auto mb-4 row fs-5"
-				>
-					<label class="form-check-label text-nowrap" for="autoUpdateToggle">Toggle auto update</label>
-					<input
-						class="form-check-input"
-						type="checkbox"
-						id="autoUpdateToggle"
+					<div class="form-check form-switch mx-auto mb-4 row fs-5">
+						<label class="form-check-label text-nowrap" for="autoUpdateToggle"
+							>Toggle auto update</label
+						>
+						<input
+							class="form-check-input"
+							type="checkbox"
+							id="autoUpdateToggle"
 						/>
-				</div>
-
-
-
-
+					</div>
 				</div>
 			</div>
 		</div>

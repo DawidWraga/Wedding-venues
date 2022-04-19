@@ -122,6 +122,30 @@ async function getVenueBookings(name) {
 
 // BOOK NOW MODAL COMPONENTS
 
+const createLoadingHTML = () => {
+	return `
+	<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin:auto;background:#fff;display:block;" width="120px" height="120px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+	<g transform="translate(20 50)">
+	<circle cx="0" cy="0" r="6" fill="#e15b64">
+		<animateTransform attributeName="transform" type="scale" begin="-0.375s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform>
+	</circle>
+	</g><g transform="translate(40 50)">
+	<circle cx="0" cy="0" r="6" fill="#f8b26a">
+		<animateTransform attributeName="transform" type="scale" begin="-0.25s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform>
+	</circle>
+	</g><g transform="translate(60 50)">
+	<circle cx="0" cy="0" r="6" fill="#abbd81">
+		<animateTransform attributeName="transform" type="scale" begin="-0.125s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform>
+	</circle>
+	</g><g transform="translate(80 50)">
+	<circle cx="0" cy="0" r="6" fill="#81a3bd">
+		<animateTransform attributeName="transform" type="scale" begin="0s" calcMode="spline" keySplines="0.3 0 0.7 1;0.3 0 0.7 1" values="0;1;0" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite"></animateTransform>
+	</circle>
+	</g>
+	</svg>
+`;
+};
+
 async function createDateSelectionHTML(name) {
 	function formatDate(date) {
 		return `${date.toLocaleDateString()} \
@@ -161,13 +185,13 @@ async function changeBookingDetailsModal(name) {
 	document.getElementById('bookModalTitle').innerHTML =
 		name + ' Booking Details';
 
-	//clear body
-	const modalBody = document.getElementById('bookModalBody');
-	modalBody.innerHTML = '';
-
 	// DATE SELECTOR
+	const modalBody = document.getElementById('bookModalBody');
+	modalBody.innerHTML = `<p class="text-center">${createLoadingHTML()}</p>`;
+
 	const dateSelectionHTML = await createDateSelectionHTML(name);
 	dateSelectionHTML.addEventListener('change', updatePrices);
+	modalBody.innerHTML = '';
 	modalBody.appendChild(dateSelectionHTML);
 
 	// UPDATE PRICES
@@ -219,23 +243,23 @@ async function changeBookingDetailsModal(name) {
 		const pricePerPersonHTML =
 			partySize <= 1
 				? ''
-				: `<h5 class="mx-4 position-relative" style="right:22px">Total price per person:</h5>
-			<h5 class="text-end mx-4">£${numberWithCommas(p.perPerson)}</h5>
+				: `<h5 class="">Total price per person:</h5>
+			<h5 class="">£${numberWithCommas(Math.round(p.perPerson))}</h5>
 		`;
 
 		// COMPLETE PRICES STRING
 		const priceString = `
-		<div class="price-grid py-3 px-md-4">
+		<div class="price-grid py-3 px-3 px-sm-5">
 			<h5 >Catering for ${daysCount} days:</h5>
 			<h5 class="text-end">£${numberWithCommas(catering_price * daysCount)}</h5>
 			${weekendPriceHTML}
 			${weekdayPriceHTML}
 		</div>
-		<div class="price-grid py-3 d-flex justify-content-center text-center mt-3 flex-wrap">
-			<h4 class="col fw-bold fs-5 ms-4">
+		<div class="price-grid py-3 justify-content-center text-center ">
+			<h4 class="fw-bold ">
 				Total price for ${partySize} Guest${sCheck(partySize)}:
 			</h4>
-			<h4 class="col fw-bold fs-5">£${numberWithCommas(p.total)}</h4>
+			<h4 class="fw-bold ">£${numberWithCommas(p.total)}</h4>
 			${pricePerPersonHTML}
 		</div>
 	`.replaceAll(/\n|\t/g, '');
@@ -250,11 +274,32 @@ async function changeBookingDetailsModal(name) {
 
 function createBookNowButton() {
 	const btn = document.createElement('button');
-	btn.classList.add('btn', 'checkOutSmallBtn', 'btn-outline-success', 'd-flex');
+	btn.classList.add(
+		'btn',
+		'checkOutSmallBtn',
+		'btn-outline-success',
+		'd-flex',
+		'justify-content-center'
+	);
 	btn.innerHTML = `<i class="bi bi-calendar-check svg"></i>`;
 	btn.setAttribute('data-bs-toggle', 'modal');
 	btn.setAttribute('data-bs-target', '#bookModal');
 	return btn;
+}
+
+function formatRank(num) {
+	const j = num % 10;
+	const k = num % 100;
+	if (j == 1 && k != 11) {
+		return num + 'st';
+	}
+	if (j == 2 && k != 12) {
+		return num + 'nd';
+	}
+	if (j == 3 && k != 13) {
+		return num + 'rd';
+	}
+	return num + 'th';
 }
 
 // RENDER VENUE
@@ -270,32 +315,67 @@ async function renderCards() {
 	data.forEach((venue) => {
 		const cardHTML = document.importNode(cardTemplate.content, true);
 
-		// modal header image
+		// card header image
 		cardHTML.querySelector('img').src =
 			venue['name'].toLowerCase().replaceAll(' ', '_') + '.avif';
 
-		// modal header name
+		// card header name
 		cardHTML.querySelector('.card-name').innerHTML = venue.name;
 
-		// modal body details
-		let listItems = ``;
-		for (let [col, cell] of Object.entries(venue)) {
-			if (col === 'name') continue;
-			col = formatDisplayString(col);
-			if (col.includes('price')) cell = '£' + cell;
-
-			listItems += `<li class="list-group-item d-flex justify-content-between">
-			<p class="pe-1">${formatDisplayString(col)}:  </p>
-			<p class="fw-bolder pe-1 text-end">${numberWithCommas(cell)}</P
-			</li>`;
+		// licensed check
+		const icon = cardHTML.querySelector('.verified-icon-container');
+		new bootstrap.Tooltip(icon);
+		if (venue.licensed === 'No') {
+			icon.setAttribute('data-bs-original-title', 'Unlicensed');
+			icon.querySelector('svg').setAttribute('fill', 'rgba(20 20 20 / .2)');
+			icon.querySelector('svg').setAttribute('stroke', 'lightgray');
+			icon.querySelector('rect').style.display = 'none';
 		}
-		cardHTML.querySelector('ul').innerHTML = listItems;
 
-		//modal footer book now btn
-		cardHTML.querySelector('.bookNowBtn').addEventListener('click', (ev) => {
+		// card body details
+		const list = cardHTML.querySelector('ul');
+		for (let [col, cell] of Object.entries(venue)) {
+			if (
+				col === 'weekend_price' ||
+				col === 'weekday_price' ||
+				col === 'catering_price' ||
+				col === 'capacity'
+			) {
+				list.innerHTML += `
+				<li class="list-group-item d-flex justify-content-between">
+					<p class="pe-1">${formatDisplayString(col)}:  </p>
+					<p class="fw-bolder pe-1 text-end">
+					${col.includes('price') ? '£' : ''}${numberWithCommas(cell)}
+					${
+						col === 'catering_price'
+							? '<a href="#" class="ppToolTip text-decoration-none text-white" data-bs-toggle="tooltip" title="per person ASD">pp</a>'
+							: ''
+					}
+					${col === 'capacity' ? 'people' : ''}
+					</p>
+				</li>`;
+			}
+		}
+
+		const ppToolTip = list.querySelector('.ppToolTip');
+		new bootstrap.Tooltip(ppToolTip, { boundary: document.body });
+
+		// popularity
+		list.innerHTML += `
+		<li class="list-group-item d-flex justify-content-between">
+			<p class="pe-1">Total bookings:  </p>
+			<p class="fw-bolder pe-1 text-end">
+			${numberWithCommas(venue.popularity)} (${formatRank(venue.popularity_rank)})</p>
+		</li>`;
+
+		//card footer book now btn
+		const bookNowBtn = cardHTML.querySelector('.bookNowBtn');
+
+		bookNowBtn.innerHTML += ` (${venue.available_days})`;
+
+		bookNowBtn.addEventListener('click', (ev) => {
 			const cardHTML = ev.target.parentNode;
 			const name = cardHTML.querySelector('.card-name').innerHTML;
-			console.log(name);
 			changeBookingDetailsModal(name);
 		});
 
@@ -378,12 +458,16 @@ function renderTable(data) {
 
 // Switch display modes
 
+document.getElementById('settingsModal').onchange = () => {
+	sortDataByCol();
+	conditionalRender(data);
+};
+
 document.getElementById('showTable').onclick = () => (displayMode = 'table');
 document.getElementById('showCards').onclick = () => (displayMode = 'cards');
 
 function conditionalRender(data) {
 	if (!data.length) {
-		console.log('test');
 		document.getElementById(
 			'result'
 		).innerHTML = `<p class="text-center fs-5">no results to show. Please change the search input and try again.</p>`;
@@ -394,6 +478,11 @@ function conditionalRender(data) {
 }
 
 async function getVenueDataAndRender() {
+	const results = document.getElementById('result');
+	results.innerHTML = `
+	<p class="text-center">	${createLoadingHTML()}</p>
+	${results.innerHTML}`;
+
 	const newData = await getVenueData();
 	// prevent invalid input from changing data
 	if (newData !== undefined) data = newData;

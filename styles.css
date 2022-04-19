@@ -92,7 +92,6 @@ input[type='submit'] {
 	width: 2rem;
 	margin: 0 auto;
 }
-
 h1 {
 	font-family: 'Pacifico', cursive;
 	color: white;
@@ -101,7 +100,7 @@ h1 {
 /* =============== RESULT TABLE =============== */
 
 #result {
-	overflow: visible;
+	overflow-x: auto;
 }
 
 #result td,
@@ -115,6 +114,19 @@ h1 {
 #result table {
 	margin: 0px;
 	border-spacing: 0px;
+}
+
+@media only screen and (min-width: 600px) and (max-width: 800px) {
+	#result table {
+		left: 100px;
+		position: relative;
+	}
+}
+@media only screen and (max-width: 600px) {
+	#result table {
+		left: 200px;
+		position: relative;
+	}
 }
 
 #result table tr:nth-child(odd) {
@@ -141,12 +153,12 @@ h1 {
 
 @media only screen and (max-width: 690px) {
 	#result {
-		overflow-x: scroll !important;
+		overflow-x: auto !important;
 		width: 100% !important;
 	}
 	main {
-		padding-left: 0;
-		padding-right: 0;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
 	}
 }
 
@@ -199,24 +211,36 @@ h1 {
 }
 
 .card {
-	max-height: 840px;
+	height: 600px;
+	/* max-height: 600px; */
 	margin-left: auto;
 	margin-right: auto;
 }
 
+.card-body {
+	height: 150px !important;
+}
+
 .card .img-container {
-	height: 30%;
-	max-height: 230px;
+	height: 25%;
+	min-height: 200px;
+	/* max-height: 200px; */
 	width: 100%;
 	overflow: hidden;
 }
 
 .card .img-container img {
-	max-width: 100%;
+	/* max-width: 100%; */
 	margin: auto;
 	height: auto;
-	min-height: 240px;$
+	min-height: 200px;
 	display: block;
+}
+
+@media only screen and (min-width: 400px) and (max-width: 542px) {
+	.card .img-container img {
+		transform: translateY(-40px);
+	}
 }
 
 .card-name-container {
@@ -228,10 +252,21 @@ h1 {
 
 .cards-container {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
-	justify-items: stretch;
-	column-gap: 0.5rem;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	/* justify-items: ; */
+	column-gap: 0.8rem;
 	row-gap: 5px;
+}
+
+/* @media only screen and (min-width: 1100px) {
+	.card {
+		margin: 1px 1px;
+	}
+} */
+
+.card {
+	margin-left: 0.1px;
+	margin-right: 0.1px;
 }
 
 .cards-container > * {
@@ -247,22 +282,15 @@ h1 {
 
 /* =============== BOOK MODAL =============== */
 
+#bookModalBody {
+	min-height: 440px;
+}
+
 #bookModalBody .price-grid {
 	display: grid;
-	padding-right: 60px !important;
-	padding-left: 32px !important;
 	grid-template-columns: 1.75fr 1fr;
 	border-top: 1px solid lightgray;
 	border-bottom: 1px solid lightgray;
-}
-
-@media only screen and (max-width: 500px) {
-	#bookModalBody .price-grid {
-		padding-right: 1rem !important;
-	}
-	h4 {
-		font-size: 1rem !important;
-	}
 }
 
 @media only screen and (min-width: 420px) {
