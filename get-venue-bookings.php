@@ -1,7 +1,7 @@
 <?php
 
-// $conn = mysqli_connect("spryrr1myu6oalwl.chr7pe7iynqr.eu-west-1.rds.amazonaws.com","y21blfp42bybvehd","klclvqvgzdqq368i","ifjq14krys29jh90",3306);
-$conn = mysqli_connect("sci-mysql","coa123wuser","grt64dkh!@2FD","coa123wdb");
+$conn = mysqli_connect("spryrr1myu6oalwl.chr7pe7iynqr.eu-west-1.rds.amazonaws.com","y21blfp42bybvehd","klclvqvgzdqq368i","ifjq14krys29jh90",3306);
+// $conn = mysqli_connect("sci-mysql","coa123wuser","grt64dkh!@2FD","coa123wdb");
 if(!$conn) die("Connection failed: ". mysqli_connect_error());
 
 
