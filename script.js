@@ -237,29 +237,33 @@ async function changeBookingDetailsModal(name) {
 		const weekdayPriceHTML =
 			weekdayCount < 1
 				? ''
-				: `<h5>Price for ${weekdayCount} weekday${sCheck(weekdayCount)}:</h5>
+				: `<h5 class="text-start">Price for ${weekdayCount} weekday${sCheck(
+						weekdayCount
+				  )}:</h5>
 			<h5 class="text-end">£${numberWithCommas(p.weekdays)}</h5>`;
 
 		const pricePerPersonHTML =
 			partySize <= 1
 				? ''
-				: `<h5 class="">Total price per person:</h5>
-			<h5 class="">£${numberWithCommas(Math.round(p.perPerson))}</h5>
+				: `<h5 class="text-start">Total price per person:</h5>
+			<h5 class="text-end">£${numberWithCommas(Math.round(p.perPerson))}</h5>
 		`;
 
 		// COMPLETE PRICES STRING
 		const priceString = `
 		<div class="price-grid py-3 px-3 px-sm-5">
 			<h5 >Catering for ${daysCount} days:</h5>
-			<h5 class="text-end">£${numberWithCommas(catering_price * daysCount)}</h5>
+			<h5 class="text-end">£${numberWithCommas(
+				catering_price * daysCount * partySize
+			)}</h5>
 			${weekendPriceHTML}
 			${weekdayPriceHTML}
 		</div>
-		<div class="price-grid py-3 justify-content-center text-center ">
-			<h4 class="fw-bold ">
+		<div class="price-grid py-3 justify-content-center text-center w-75 mx-auto">
+			<h5 class="fw-semibold text-start">
 				Total price for ${partySize} Guest${sCheck(partySize)}:
-			</h4>
-			<h4 class="fw-bold ">£${numberWithCommas(p.total)}</h4>
+			</h5>
+			<h5 class="fw-bold text-end">£${numberWithCommas(p.total)}</h5>
 			${pricePerPersonHTML}
 		</div>
 	`.replaceAll(/\n|\t/g, '');
@@ -344,7 +348,7 @@ async function renderCards() {
 				list.innerHTML += `
 				<li class="list-group-item d-flex justify-content-between">
 					<p class="pe-1">${formatDisplayString(col)}:  </p>
-					<p class="fw-bolder pe-1 text-end">
+					<p class="fw-bolder pe-1 text-end mb-0">
 					${col.includes('price') ? '£' : ''}${numberWithCommas(cell)}
 					${
 						col === 'catering_price'
