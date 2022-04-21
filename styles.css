@@ -239,8 +239,14 @@ h1 {
 }
 
 @media only screen and (min-width: 400px) and (max-width: 542px) {
-	.card .img-container img {
+	/* .card .img-container img {
 		transform: translateY(-40px);
+	} */
+	.card-img-top {
+		transform: translateY(-40px);
+	}
+	.verified-icon-container {
+		z-index: 1;
 	}
 }
 
