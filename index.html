@@ -32,94 +32,142 @@
 
 	<body class="align-content-center">
 		<!-- ###### Header ######  -->
-		<header>
-			<h1
-				class="container-fluid text-center py-3 m-0 mb-lg-2 display-5 text-white bg-brand"
+		<nav class="container-fluid position-fixed top-0 text-nowrap">
+			<div
+				class="container d-flex justify-content-between flex-column flex-lg-row"
 			>
-				Dawid's Wedding Services
-			</h1>
-		</header>
-		<main class="container align-content-center">
+				<h1 class="text-center py-3 m-0 mb-lg-2 display-5 text-white">
+					Dawid's Wedding Services
+				</h1>
+
+				<ul class="d-flex justify-content-center align-items-center">
+					<li>
+						<a
+							href="#"
+							class="fs-3 text-white text-decoration-none mx-2 mx-md-3 mx-lg-4"
+							>About</a
+						>
+					</li>
+					<li>
+						<a
+							href="#"
+							class="fs-3 text-white text-decoration-none mx-2 mx-md-3 mx-lg-4"
+							>Venues</a
+						>
+					</li>
+					<li>
+						<a
+							href="#"
+							class="fs-3 text-white text-decoration-none mx-2 mx-md-3 mx-lg-4"
+							>Contact</a
+						>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<main class="container-fluid align-content-center">
 			<!-- ###### Form ######  -->
 
 			<section id="top" class="py-3 mb-3">
-				<form
-					class="col-9 col-md-8 col-lg-6 py-2 m-auto justify-content-center my-4 shadow rounded-3 px-3 px-md-5" 
-				>
-					<div class="container-fluid px-0 align-content-center">
-						<div class="row">
-							<label class="col" for="partySize">Party Size:</label>
-							<input class="col"
-								type="number"
-								name="partySize"
-								id="partySize"
-								value="2"
-								min="1"
-								required
-							/>
-						</div>
-						<div class="row">
-							<label class="col" for="catering">Catering band:</label>
-							<input class="col"
-								type="number"
-								name="catering"
-								id="catering"
-								value="1"
-								placeholder="1-5"
-								min="1"
-								max="5"
-								required
-							/>
-						</div>
-						<div class="row">
-							<label class="col" for="checkin">Search from:</label>
-							<input class="col"
-								type="Date"
-								id="checkin"
-								name="checkin"
-								value="2022-01-01"
-								required
-							/>
-						</div>
-						<div class="row">
-							<label class="col" for="checkout">Search until:</label>
-							<input class="col"
-								type="Date"
-								id="checkout"
-								name="checkout"
-								value="2022-01-10"
-								required
-							/>
-						</div>
-						</div>
-					</div>
-					<div
-						class="d-flex flex-wrap flex-md-nowrap justify-content-center my-2 text-nowrap"
+				<div class="container position-relative top-50">
+					<form
+						class="py-2 m-auto justify-content-evenly my-4 shadow rounded-3 px-2 px-md-4"
 					>
-						<button
-							type="button"
-							class="btn btn-outline-secondary fw-bold mx-1 mb-2 mb-md-0"
-							data-bs-toggle="modal"
-							data-bs-target="#settingsModal"
+						<div
+							class="container-fluid row flex-column flex-md-row flex-lg-nowrap align-content-center justify-content-between text-wrap mx-0"
 						>
-							Settings
-						</button>
-						<button
-							type="submit"
-							id="search"
-							class="btn text-white mx-1 fw-bold bg-brand text-white"
-						>
-							Search available venues
-						</button>
-					</div>
-				</form>
+							<div class="col-lg-5 col-12 justify-content-center row">
+								<label class="col" for="partySize"
+									><span class="text-nowrap col">Party Size:</span>
+									<input
+										class="col"
+										type="number"
+										name="partySize"
+										id="partySize"
+										value="2"
+										min="1"
+										required
+								/></label>
+								<label class="col" for="catering"
+									><span class="text-nowrap col">Catering band:</span>
+									<input
+										class="col"
+										type="number"
+										name="catering"
+										id="catering"
+										value="1"
+										placeholder="1-5"
+										min="1"
+										max="5"
+										required
+									/>
+								</label>
+							</div>
+
+							<div
+								class="col-lg-5 col-12 justify-content-center row flex-lg-nowrap"
+							>
+								<label class="col" for="checkin"
+									><span class="text-nowrap col">Search from:</span>
+									<input
+										class="col"
+										type="Date"
+										id="checkin"
+										name="checkin"
+										value="2022-01-01"
+										required
+									/>
+								</label>
+								<label class="col" for="checkout"
+									><span class="col text-nowrap">Search until:</span>
+									<input
+										class="col"
+										type="Date"
+										id="checkout"
+										name="checkout"
+										value="2022-01-10"
+										required
+									/>
+								</label>
+							</div>
+
+							<div class="col-lg-2 col-12 justify-content-evenly row">
+								<button
+									type="submit"
+									id="search"
+									class="btn text-white mx-1 fw-bold bg-brand text-white col rounded-circle w-25 p-0"
+								>
+									<i class="bi bi-search" style="font-size: 25px"></i>
+									<!-- Search available venues -->
+								</button>
+
+								<button
+									type="button"
+									class="btn btn-outline-secondary col rounded-circle w-25 p-0"
+									data-bs-toggle="modal"
+									data-bs-target="#settingsModal"
+									id="settingsBtn"
+								>
+									<!-- Settings  -->
+									<i class="bi bi-gear" style="font-size: 25px"></i>
+								</button>
+							</div>
+						</div>
+
+						<!-- <div
+							class="d-flex flex-wrap flex-md-nowrap justify-content-center my-2 text-nowrap"
+						> -->
+
+						<!-- </div> -->
+					</form>
+					<section
+						id="result"
+						class="justify-content-center px-0 position-relative bg-white p-3 px-4 shadow rounded"
+					></section>
+				</div>
 			</section>
 
 			<!-- ###### Result ######  -->
-			<section
-				id="result"
-				class="container-fluid justify-content-center px-0 position-relative"
-			></section>
 		</main>
 		<footer class="container-fluid"></footer>
 
@@ -128,13 +176,27 @@
 		<template id="venueCard">
 			<div class="card border border-1 shadow">
 				<div class="img-and-name position-relative img-container">
-					<a class="verified-icon-container position-absolute" style="top:5px; right:5px; "  data-bs-toggle="tooltip" 
-					title="Licensed">
-						<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="var(--brand)" class="bi bi-patch-check-fill" viewBox="-1 -1 18 18" stroke="white" stroke-width=".5" >
-							<rect x="5" height="6" y="5" width="6" style="fill: white;"/>
+					<a
+						class="verified-icon-container position-absolute"
+						style="top: 5px; right: 5px"
+						data-bs-toggle="tooltip"
+						title="Licensed"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="40"
+							height="40"
+							fill="var(--brand)"
+							class="bi bi-patch-check-fill"
+							viewBox="-1 -1 18 18"
+							stroke="white"
+							stroke-width=".5"
+						>
+							<rect x="5" height="6" y="5" width="6" style="fill: white" />
 
-							<path  d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
-
+							<path
+								d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"
+							/>
 						</svg>
 					</a>
 					<img class="card-img-top" />
@@ -215,7 +277,10 @@
 							class="container row text-nowrap justify-content-between align-content-center"
 						>
 							<!-- DESCRIPTION -->
-							<div class="description col d-flex mx-auto" style="max-width: 40%">
+							<div
+								class="description col d-flex mx-auto"
+								style="max-width: 40%"
+							>
 								<p class="my-auto text-center">Display mode:</p>
 							</div>
 
