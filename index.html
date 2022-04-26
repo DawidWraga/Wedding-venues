@@ -25,41 +25,45 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
-			href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Montaga&family=Pacifico&family=Roboto&display=swap"
 			rel="stylesheet"
 		/>
 	</head>
 
 	<body class="align-content-center">
 		<!-- ###### Header ######  -->
-		<nav class="container-fluid position-fixed top-0 text-nowrap">
+		<nav
+			class="container-fluid position-relative top-0 text-nowrap"
+			style="z-index: 10; display: inline-block"
+		>
 			<div
 				class="container d-flex justify-content-between flex-column flex-lg-row"
 			>
-				<h1 class="text-center py-3 m-0 mb-lg-2 display-5 text-white">
+				<!-- <h1 class="text-center py-3 m-0 mb-lg-2 display-5 text-white">
 					Dawid's Wedding Services
-				</h1>
+				</h1> -->
+				<img src="./logo.png" class="header-logo mx-auto mx-lg-0 mb-1 mt-2" />
 
-				<ul class="d-flex justify-content-center align-items-center">
+				<ul class="d-flex justify-content-center align-items-center px-0">
 					<li>
 						<a
 							href="#"
-							class="fs-3 text-white text-decoration-none mx-2 mx-md-3 mx-lg-4"
+							class="fs-3 text-uppercase text-decoration-none mx-2 mx-md-3 mx-lg-4"
 							>About</a
 						>
 					</li>
 					<li>
 						<a
 							href="#"
-							class="fs-3 text-white text-decoration-none mx-2 mx-md-3 mx-lg-4"
-							>Venues</a
+							class="fs-3 text-uppercase text-decoration-none mx-2 mx-md-3 mx-lg-4"
+							>Contact</a
 						>
 					</li>
 					<li>
 						<a
 							href="#"
-							class="fs-3 text-white text-decoration-none mx-2 mx-md-3 mx-lg-4"
-							>Contact</a
+							class="fs-3 text-uppercase text-decoration-none mx-2 mx-md-3 mx-lg-4 nav-venues"
+							>Venues</a
 						>
 					</li>
 				</ul>
@@ -68,104 +72,104 @@
 		<main class="container-fluid px-0 align-content-center">
 			<!-- ###### Form ######  -->
 
-			<section id="top" class="py-3 mb-3">
-				<div class="container position-relative" style="top: 150px">
-					<form
-						class="py-2 m-auto justify-content-evenly my-4 shadow rounded-3 px-2 px-md-4"
+			<section id="top" class="py-3 mb-3"></section>
+			<div class="container position-relative search-container">
+				<form
+					class="py-2 m-auto justify-content-evenly my-4 shadow px-2 px-md-4"
+					style="border-radius: 4px"
+				>
+					<div
+						class="container-fluid row flex-column flex-md-row flex-lg-nowrap align-content-center justify-content-between text-wrap mx-0"
 					>
-						<div
-							class="container-fluid row flex-column flex-md-row flex-lg-nowrap align-content-center justify-content-between text-wrap mx-0"
-						>
-							<div class="col-lg-5 col-12 justify-content-center row">
-								<label class="col" for="partySize"
-									><span class="text-nowrap col">Party Size:</span>
-									<input
-										class="col"
-										type="number"
-										name="partySize"
-										id="partySize"
-										value="2"
-										min="1"
-										required
-								/></label>
-								<label class="col" for="catering"
-									><span class="text-nowrap col">Catering band:</span>
-									<input
-										class="col"
-										type="number"
-										name="catering"
-										id="catering"
-										value="1"
-										placeholder="1-5"
-										min="1"
-										max="5"
-										required
-									/>
-								</label>
-							</div>
-
-							<div
-								class="col-lg-5 col-12 justify-content-center row flex-lg-nowrap"
-							>
-								<label class="col" for="checkin"
-									><span class="text-nowrap col">Search from:</span>
-									<input
-										class="col"
-										type="Date"
-										id="checkin"
-										name="checkin"
-										value="2022-01-01"
-										required
-									/>
-								</label>
-								<label class="col" for="checkout"
-									><span class="col text-nowrap">Search until:</span>
-									<input
-										class="col"
-										type="Date"
-										id="checkout"
-										name="checkout"
-										value="2022-01-10"
-										required
-									/>
-								</label>
-							</div>
-
-							<div class="col-lg-2 col-12 justify-content-evenly row">
-								<button
-									type="submit"
-									id="search"
-									class="btn text-white mx-1 fw-bold bg-brand text-white col rounded-circle w-25 p-0"
-								>
-									<i class="bi bi-search" style="font-size: 25px"></i>
-									<!-- Search available venues -->
-								</button>
-
-								<button
-									type="button"
-									class="btn btn-outline-secondary col rounded-circle w-25 p-0"
-									data-bs-toggle="modal"
-									data-bs-target="#settingsModal"
-									id="settingsBtn"
-								>
-									<!-- Settings  -->
-									<i class="bi bi-gear" style="font-size: 25px"></i>
-								</button>
-							</div>
+						<div class="col-lg-5 col-12 justify-content-center row flex-grow-1">
+							<label class="col br-1" for="partySize"
+								><span class="text-nowrap col">Party Size:</span>
+								<input
+									class="col border-0"
+									type="number"
+									name="partySize"
+									id="partySize"
+									value="2"
+									min="1"
+									required
+							/></label>
+							<label class="col br-1" for="catering"
+								><span class="text-nowrap col">Catering band:</span>
+								<input
+									class="col border-0"
+									type="number"
+									name="catering"
+									id="catering"
+									value="1"
+									placeholder="1-5"
+									min="1"
+									max="5"
+									required
+								/>
+							</label>
 						</div>
 
-						<!-- <div
-							class="d-flex flex-wrap flex-md-nowrap justify-content-center my-2 text-nowrap"
-						> -->
+						<div
+							class="col-lg-5 col-12 justify-content-center row flex-lg-nowrap flex-grow-1"
+						>
+							<label class="col br-1" for="checkin"
+								><span class="text-nowrap col">Search from:</span>
+								<input
+									class="col border-0"
+									type="Date"
+									id="checkin"
+									name="checkin"
+									value="2022-01-01"
+									required
+								/>
+							</label>
+							<label class="col" for="checkout"
+								><span class="col text-nowrap">Search until:</span>
+								<input
+									class="col border-0"
+									type="Date"
+									id="checkout"
+									name="checkout"
+									value="2022-01-10"
+									required
+								/>
+							</label>
+						</div>
 
-						<!-- </div> -->
-					</form>
-					<section
-						id="result"
-						class="justify-content-center px-0 position-relative bg-white p-3 px-4 shadow rounded"
-					></section>
-				</div>
-			</section>
+						<div class="col-lg-2 col-12 justify-content-evenly row flex-grow-1">
+							<button
+								type="submit"
+								id="search"
+								class="btn text-white mx-1 fw-bold bg-brand text-white col-10 col-lg rounded-3 p-0"
+							>
+								<i class="bi bi-search" style="font-size: 25px"></i>
+								<!-- Search available venues -->
+							</button>
+
+							<button
+								type="button"
+								class="btn btn-outline-secondary col-2 col-lg rounded-3 p-0"
+								data-bs-toggle="modal"
+								data-bs-target="#settingsModal"
+								id="settingsBtn"
+							>
+								<!-- Settings  -->
+								<i class="bi bi-gear" style="font-size: 25px"></i>
+							</button>
+						</div>
+					</div>
+
+					<!-- <div
+						class="d-flex flex-wrap flex-md-nowrap justify-content-center my-2 text-nowrap"
+					> -->
+
+					<!-- </div> -->
+				</form>
+				<section
+					id="result"
+					class="justify-content-center px-0 position-relative bg-white p-3 px-4 shadow rounded"
+				></section>
+			</div>
 
 			<!-- ###### Result ######  -->
 		</main>
@@ -211,7 +215,7 @@
 				<ul class="list-group list-group-flush card-body text-nowrap pb-0"></ul>
 				<button
 					type="button"
-					class="btn py-2 bg-brand fw-bold m-1 text-white bookNowBtn fs-6"
+					class="btn py-2 bg-brand fw-bold m-1 text-white bookNowBtn rounded-3 fs-6"
 					data-bs-toggle="modal"
 					data-bs-target="#bookModal"
 				>
