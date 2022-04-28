@@ -30,8 +30,8 @@ function formatDisplayString(text) {
 const checkin = document.getElementById('checkin');
 const checkout = document.getElementById('checkout');
 
-// set search from to today and search until to in 7 days
-// checkin.valueAsDate = new Date();
+checkin.valueAsDate = new Date();
+// set search until default to 7 days in the future
 // checkout.valueAsDate = new Date(new Date().setDate(new Date().getDate() + 7));
 
 checkout.min = checkin.value;
