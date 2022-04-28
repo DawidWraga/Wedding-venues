@@ -30,11 +30,11 @@ function formatDisplayString(text) {
 const checkin = document.getElementById('checkin');
 const checkout = document.getElementById('checkout');
 
-checkin.valueAsDate = new Date();
-// set search until default to 7 days in the future
-// checkout.valueAsDate = new Date(new Date().setDate(new Date().getDate() + 7));
+const today = sqlFormatDate(new Date());
 
-checkout.min = checkin.value;
+checkin.min = today;
+checkout.min = today;
+
 checkin.onchange = (ev) => (checkout.min = ev.target.value);
 
 function getCheckinDates() {
@@ -75,8 +75,10 @@ async function getVenueData() {
 	let cateringGrade = getSelectedCatering();
 	let partySizeHTML = document.getElementById('partySize');
 	let partySize = partySizeHTML.value;
-	let checkout = sqlFormatDate(document.getElementById('checkout').valueAsDate);
-	let checkin = sqlFormatDate(document.getElementById('checkin').valueAsDate);
+	let checkout = sqlFormatDate(
+		document.getElementById('checkout')?.valueAsDate
+	);
+	let checkin = sqlFormatDate(document.getElementById('checkin')?.valueAsDate);
 
 	// input validation
 	// (extends html validation to ensure functionality when using auto-update ie no submit)
@@ -181,15 +183,13 @@ ${date.toLocaleString('en', { weekday: 'long' })}`;
 		let isBooked = bookedDates.includes(date);
 		let conditionalDisabled = isBooked ? 'disabled' : '';
 
-		const checkboxHTML = document.createElement('div');
-		checkboxHTML.classList.add('form-check');
-		checkboxHTML.innerHTML = `
-  	<input class="form-check-input" style="margin-top: 0.7rem;" type="checkbox" id="${date}" ${conditionalDisabled}>
-  	<label class="form-check-label" for="${date}">
-    ${date}</label>
-		`.replaceAll(/\n|\t/g, '');
-
-		formHTML.appendChild(checkboxHTML);
+		formHTML.innerHTML += `
+		<div class="form-check">
+		<input class="form-check-input" style="margin-top: 0.7rem;" type="checkbox" id="${date}" ${conditionalDisabled}>
+  	 <label class="form-check-label" for="${date}">
+     ${date}</label>
+		</div>
+	`;
 	});
 
 	return formHTML;
@@ -202,7 +202,7 @@ async function changeBookingDetailsModal(name) {
 
 	// DATE SELECTOR
 	const modalBody = document.getElementById('bookModalBody');
-	modalBody.innerHTML = `<p class="text-center">${createLoadingHTML()}</p>`;
+	modalBody.innerHTML = createLoadingHTML();
 
 	const dateSelectionHTML = await createDateSelectionHTML(name);
 	dateSelectionHTML.addEventListener('change', updatePrices);
@@ -268,21 +268,18 @@ async function changeBookingDetailsModal(name) {
 		const priceString = `
 		<div class="price-grid py-3 mx-auto">
 			<h5 >Catering for ${daysCount} days:</h5>
-			<h5 class="text-end">£${numberWithCommas(
-				catering_price * daysCount * partySize
-			)}</h5>
+			<h5 class="text-end">£${numberWithCommas(p.catering)}</h5>
 			${weekendPriceHTML}
 			${weekdayPriceHTML}
 		</div>
 		<div class="price-grid py-3 justify-content-center text-center  mx-auto">
-		
 			<h5 class="fw-semibold text-start">
 				Total price for ${partySize} Guest${sCheck(partySize)}:
 			</h5>
 			<h5 class="fw-bold text-end">£${numberWithCommas(p.total)}</h5>
 			${pricePerPersonHTML}
 		</div>
-	`.replaceAll(/\n|\t/g, '');
+	`;
 
 		// add
 		const pricesHTML = document.createElement('div');
@@ -489,9 +486,8 @@ document.getElementById('showCards').onclick = () => (displayMode = 'cards');
 
 function conditionalRender(data) {
 	if (!data?.length) {
-		document.getElementById(
-			'result'
-		).innerHTML = `<p class="text-center fs-5">no results to show. Please change the search input and try again.</p>`;
+		document.getElementById('result').innerHTML = `
+		<p class="text-center fs-5">no results to show. Please change the search input and try again.</p>`;
 		return;
 	}
 	if (displayMode === 'table') renderTable(data);
@@ -500,9 +496,7 @@ function conditionalRender(data) {
 
 async function getVenueDataAndRender() {
 	const results = document.getElementById('result');
-	results.innerHTML = `
-	<p class="text-center">	${createLoadingHTML()}</p>
-	${results.innerHTML}`;
+	results.innerHTML = createLoadingHTML() + results.innerHTML;
 
 	// If auto-update is enabled then set 10ms timeout before getting data to prevent bugs caued by DOM update duraation (get venue data depends on catering band drop down being updated)
 	setTimeout(
@@ -591,9 +585,9 @@ document.getElementById('autoUpdateToggle').addEventListener('click', (ev) => {
 	}
 });
 
+// Change button text to selected catering option
 cateringOptions.forEach((option) => {
 	option.addEventListener('click', (ev) => {
 		cateringDropDown.previousElementSibling.innerText = ev.target.innerHTML;
-		// console.log(ev.target.innerHTML);
 	});
 });
