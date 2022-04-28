@@ -16,7 +16,7 @@ $checkout = validate($_GET['checkout']);
 $partySize = validate($_GET['partySize']);
 $cateringGrade = validate($_GET['cateringGrade']);
 
-$dateRange = date_diff(date_create($checkin),date_create($checkout))->format('%d');
+$dateRange = (new DateTime($checkin))->diff(new DateTime($checkout))->days;
 $dateRange = (string)((int)$dateRange+1);
 
 $sql = "

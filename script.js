@@ -2,6 +2,8 @@ let data;
 const sortby = { order: 'ASC', col: 'popularity_rank' };
 let displayMode = 'cards';
 let cardTemplate;
+const cateringDropDown = document.querySelector(`[aria-labelledby='catering']`);
+const cateringOptions = cateringDropDown.querySelectorAll('a');
 
 window.onload = () => {
 	cardTemplate = document.querySelector('template');
@@ -28,8 +30,9 @@ function formatDisplayString(text) {
 const checkin = document.getElementById('checkin');
 const checkout = document.getElementById('checkout');
 
-checkin.valueAsDate = new Date();
-checkout.valueAsDate = new Date(new Date().setDate(new Date().getDate() + 7));
+// set search from to today and search until to in 7 days
+// checkin.valueAsDate = new Date();
+// checkout.valueAsDate = new Date(new Date().setDate(new Date().getDate() + 7));
 
 checkout.min = checkin.value;
 checkin.onchange = (ev) => (checkout.min = ev.target.value);
@@ -55,8 +58,21 @@ function getCheckinDates() {
 
 //################### DATABASE ##################
 
+const getSelectedCatering = () => {
+	const cateringName = document.getElementById('catering').innerText;
+	const cateringNameMap = {
+		Basic: 1,
+		Standard: 2,
+		Premium: 3,
+		Luxury: 4,
+		Deluxe: 5,
+	};
+
+	return cateringNameMap[cateringName];
+};
+
 async function getVenueData() {
-	let cateringGrade = document.getElementById('catering').value;
+	let cateringGrade = getSelectedCatering();
 	let partySizeHTML = document.getElementById('partySize');
 	let partySize = partySizeHTML.value;
 	let checkout = sqlFormatDate(document.getElementById('checkout').valueAsDate);
@@ -69,9 +85,8 @@ async function getVenueData() {
 		return alert(`invalid input for party size: must be number over 1`);
 	}
 
-	if (+cateringGrade < 1 || +cateringGrade > 5) {
-		document.getElementById('catering').value = 1;
-		return alert(`invalid input for catering grade: Must be between 1 and 5.`);
+	if (!cateringGrade || cateringGrade < 1 || cateringGrade > 5) {
+		return alert(`Please select a catering grade`);
 	}
 
 	if (new Date(checkin) > new Date(checkout)) {
@@ -251,7 +266,7 @@ async function changeBookingDetailsModal(name) {
 
 		// COMPLETE PRICES STRING
 		const priceString = `
-		<div class="price-grid py-3 px-3 px-sm-5">
+		<div class="price-grid py-3 mx-auto">
 			<h5 >Catering for ${daysCount} days:</h5>
 			<h5 class="text-end">£${numberWithCommas(
 				catering_price * daysCount * partySize
@@ -259,7 +274,8 @@ async function changeBookingDetailsModal(name) {
 			${weekendPriceHTML}
 			${weekdayPriceHTML}
 		</div>
-		<div class="price-grid py-3 justify-content-center text-center w-75 mx-auto">
+		<div class="price-grid py-3 justify-content-center text-center  mx-auto">
+		
 			<h5 class="fw-semibold text-start">
 				Total price for ${partySize} Guest${sCheck(partySize)}:
 			</h5>
@@ -285,7 +301,7 @@ function createBookNowButton() {
 		'd-flex',
 		'justify-content-center'
 	);
-	btn.innerHTML = `<i class="bi bi-calendar-check svg"></i>`;
+	btn.innerHTML = `<i class="bi bi-calendar-check svg position-relative" style="top: 0.75px"></i>`;
 	btn.setAttribute('data-bs-toggle', 'modal');
 	btn.setAttribute('data-bs-target', '#bookModal');
 	return btn;
@@ -397,6 +413,7 @@ function renderTable(data) {
 	resultHTML.innerHTML = '';
 
 	const tableHTML = document.createElement('table');
+	tableHTML.classList.add('w-100');
 	data.forEach((venue, i) => {
 		// Create headers
 		if (i === 0) {
@@ -471,7 +488,7 @@ document.getElementById('showTable').onclick = () => (displayMode = 'table');
 document.getElementById('showCards').onclick = () => (displayMode = 'cards');
 
 function conditionalRender(data) {
-	if (!data.length) {
+	if (!data?.length) {
 		document.getElementById(
 			'result'
 		).innerHTML = `<p class="text-center fs-5">no results to show. Please change the search input and try again.</p>`;
@@ -487,12 +504,19 @@ async function getVenueDataAndRender() {
 	<p class="text-center">	${createLoadingHTML()}</p>
 	${results.innerHTML}`;
 
-	const newData = await getVenueData();
-	// prevent invalid input from changing data
-	if (newData !== undefined) data = newData;
-	else data = await getVenueData();
-	sortDataByCol();
-	conditionalRender(data);
+	// If auto-update is enabled then set 10ms timeout before getting data to prevent bugs caued by DOM update duraation (get venue data depends on catering band drop down being updated)
+	setTimeout(
+		async () => {
+			const newData = await getVenueData();
+			// prevent invalid input from changing data
+			if (newData !== undefined) data = newData;
+			else data = await getVenueData();
+
+			sortDataByCol();
+			conditionalRender(data);
+		},
+		document.getElementById('autoUpdateToggle').checked ? 10 : 0
+	);
 }
 
 document.querySelector('form').addEventListener('submit', (ev) => {
@@ -539,6 +563,9 @@ function turnOnAutoUpdate() {
 	document.querySelectorAll('input').forEach((inputHTML) => {
 		inputHTML.addEventListener('change', getVenueDataAndRender);
 	});
+	cateringOptions.forEach((option) => {
+		option.addEventListener('click', getVenueDataAndRender);
+	});
 	getVenueDataAndRender();
 }
 
@@ -555,6 +582,18 @@ document.getElementById('autoUpdateToggle').addEventListener('click', (ev) => {
 		document.querySelectorAll('input').forEach((inputHTML) => {
 			inputHTML.removeEventListener('change', getVenueDataAndRender);
 		});
+
+		cateringOptions.forEach((option) => {
+			option.removeEventListener('click', getVenueDataAndRender);
+		});
+
 		localStorage.setItem('autoUpdate', false);
 	}
+});
+
+cateringOptions.forEach((option) => {
+	option.addEventListener('click', (ev) => {
+		cateringDropDown.previousElementSibling.innerText = ev.target.innerHTML;
+		// console.log(ev.target.innerHTML);
+	});
 });

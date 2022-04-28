@@ -28,6 +28,8 @@ main {
 	/* min-height: 80vh; */
 	/* height: fit-content; */
 	background-color: rgba(0 0 0 / 0.05);
+	/* border: 1px solid transparent; */
+	padding-bottom: 20px;
 }
 
 header {
@@ -44,14 +46,14 @@ header {
 }
 
 .search-container {
-	top: -400px;
+	top: -340px;
 }
 
-@media only screen and (max-width: 992px) {
+/* @media only screen and (max-width: 992px) {
 	.search-container {
-		top: -450px;
+		top: -300px;
 	}
-}
+} */
 /* @media only screen and (max-width: 992px) {
 	.search-container {
 		top: clamp(-150px, -25vh, -200px);
@@ -81,15 +83,13 @@ nav a {
 	color: black !important;
 }
 
-@media only screen and (min-width: 987px) {
+/* @media only screen and (min-width: 987px) {
 	.nav-venues {
 		/* border: 1px solid red; */
-		color: white !important;
-		background-color: var(--brand);
-		border-radius: 5px;
-		padding: 0.4rem;
-	}
-}
+/* color: white !important;
+		background-color: var(--brand); */
+/* border-radius: 5px; */
+/* padding: 0.4rem; */
 
 @media only screen and (min-width: 980px) {
 	nav a,
@@ -126,6 +126,10 @@ form input {
 	width: 100%;
 	padding-left: 0.3rem;
 }
+
+/* #catering {
+	font-size: 14px;
+} */
 
 #search {
 	background-color: var(brand);
@@ -388,6 +392,17 @@ h1 {
 	grid-template-columns: 1.75fr 1fr;
 	border-top: 1px solid lightgray;
 	border-bottom: 1px solid lightgray;
+	width: 75%;
+}
+
+@media only screen and (max-width: 600px) {
+	.price-grid {
+		width: 90% !important;
+	}
+
+	/* #dateSelector > * {
+		width: 90% !important;
+	} */
 }
 
 @media only screen and (min-width: 420px) {
@@ -425,5 +440,5 @@ h6 {
 #dateSelector > * {
 	margin-left: auto;
 	margin-right: auto;
-	width: 50% !important;
+	width: max(250px, 50%);
 }

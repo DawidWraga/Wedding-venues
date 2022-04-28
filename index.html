@@ -31,49 +31,47 @@
 	</head>
 
 	<body class="align-content-center">
-		<!-- ###### Header ######  -->
-		<nav
-			class="container-fluid position-relative top-0 text-nowrap"
-			style="z-index: 10; display: inline-block"
-		>
-			<div
-				class="container d-flex justify-content-between flex-column flex-lg-row"
-			>
-				<!-- <h1 class="text-center py-3 m-0 mb-lg-2 display-5 text-white">
-					Dawid's Wedding Services
-				</h1> -->
-				<img src="./logo.png" class="header-logo mx-auto mx-lg-0 mb-1 mt-2" />
-
-				<ul class="d-flex justify-content-center align-items-center px-0">
-					<li>
-						<a
-							href="#"
-							class="fs-3 text-uppercase text-decoration-none mx-2 mx-md-3 mx-lg-4"
-							>About</a
-						>
-					</li>
-					<li>
-						<a
-							href="#"
-							class="fs-3 text-uppercase text-decoration-none mx-2 mx-md-3 mx-lg-4"
-							>Contact</a
-						>
-					</li>
-					<li>
-						<a
-							href="#"
-							class="fs-3 text-uppercase text-decoration-none mx-2 mx-md-3 mx-lg-4 nav-venues"
-							>Venues</a
-						>
-					</li>
-				</ul>
-			</div>
-		</nav>
 		<main class="container-fluid px-0 align-content-center">
-			<!-- ###### Form ######  -->
+			<section id="top" class="py-3 mb-3 position-relative"></section>
+			<!-- ###### Header ######  -->
+			<nav
+				class="container-fluid position-absolute top-0 text-nowrap"
+				style="z-index: 10; display: inline-block"
+			>
+				<div
+					class="container d-flex justify-content-between flex-column flex-lg-row"
+				>
+					<img src="./logo.png" class="header-logo mx-auto mx-lg-0 mb-1 mt-2" />
 
-			<section id="top" class="py-3 mb-3"></section>
+					<ul class="d-flex justify-content-center align-items-center px-0">
+						<li>
+							<a
+								href="#"
+								class="fs-3 text-uppercase text-decoration-none mx-2 mx-md-3 mx-lg-4 bg-white p-2 rounded"
+								>About</a
+							>
+						</li>
+						<li>
+							<a
+								href="#"
+								class="fs-3 text-uppercase text-decoration-none mx-2 mx-md-3 mx-lg-4 bg-white p-2 rounded"
+								>Contact</a
+							>
+						</li>
+						<li>
+							<a
+								href="#"
+								class="fs-3 text-uppercase text-decoration-none mx-2 mx-md-3 mx-lg-4 nav-venues p-2 rounded text-white"
+								style="background-color: var(--brand)"
+								>Venues</a
+							>
+						</li>
+					</ul>
+				</div>
+			</nav>
+
 			<div class="container position-relative search-container">
+				<!-- ###### Form ######  -->
 				<form
 					class="py-2 m-auto justify-content-evenly my-4 shadow px-2 px-md-4"
 					style="border-radius: 4px"
@@ -89,13 +87,34 @@
 									type="number"
 									name="partySize"
 									id="partySize"
-									value="2"
 									min="1"
 									required
 							/></label>
+							<!-- value="2" -->
 							<label class="col br-1" for="catering"
 								><span class="text-nowrap col">Catering band:</span>
-								<input
+
+								<div class="dropdown">
+									<button
+										class="btn dropdown-toggle bg-white text-black text-start"
+										type="button py-0"
+										id="catering"
+										data-bs-toggle="dropdown"
+										aria-expanded="false"
+										style="font-size: 16px; width: 90%"
+									>
+										Select
+									</button>
+									<ul class="dropdown-menu" aria-labelledby="catering">
+										<li><a class="dropdown-item" href="#">Basic</a></li>
+										<li><a class="dropdown-item" href="#">Standard</a></li>
+										<li><a class="dropdown-item" href="#">Premium</a></li>
+										<li><a class="dropdown-item" href="#">Luxury</a></li>
+										<li><a class="dropdown-item" href="#">Deluxe</a></li>
+									</ul>
+								</div>
+
+								<!-- <input
 									class="col border-0"
 									type="number"
 									name="catering"
@@ -105,7 +124,7 @@
 									min="1"
 									max="5"
 									required
-								/>
+								/> -->
 							</label>
 						</div>
 
@@ -119,10 +138,10 @@
 									type="Date"
 									id="checkin"
 									name="checkin"
-									value="2022-01-01"
 									required
 								/>
 							</label>
+							<!-- value="2022-01-01" -->
 							<label class="col" for="checkout"
 								><span class="col text-nowrap">Search until:</span>
 								<input
@@ -130,9 +149,9 @@
 									type="Date"
 									id="checkout"
 									name="checkout"
-									value="2022-01-10"
 									required
 								/>
+								<!-- value="2022-01-10" -->
 							</label>
 						</div>
 
@@ -158,20 +177,13 @@
 							</button>
 						</div>
 					</div>
-
-					<!-- <div
-						class="d-flex flex-wrap flex-md-nowrap justify-content-center my-2 text-nowrap"
-					> -->
-
-					<!-- </div> -->
 				</form>
+				<!-- ###### Result ######  -->
 				<section
 					id="result"
 					class="justify-content-center px-0 position-relative bg-white p-3 px-4 shadow rounded"
 				></section>
 			</div>
-
-			<!-- ###### Result ######  -->
 		</main>
 		<footer class="container-fluid"></footer>
 
