@@ -89,6 +89,7 @@
 									id="partySize"
 									min="1"
 									required
+									placeholder="1-1000"
 							/></label>
 							<!-- value="2" -->
 							<label class="col br-1" for="catering"
@@ -97,11 +98,11 @@
 								<div class="dropdown">
 									<button
 										class="btn dropdown-toggle bg-white text-black text-start"
-										type="button py-0"
+										type="button"
 										id="catering"
 										data-bs-toggle="dropdown"
 										aria-expanded="false"
-										style="font-size: 16px; width: 90%"
+										style="font-size: 18px; width: 90%; padding: 3px 1rem"
 									>
 										Select
 									</button>
@@ -113,18 +114,6 @@
 										<li><a class="dropdown-item" href="#">Deluxe</a></li>
 									</ul>
 								</div>
-
-								<!-- <input
-									class="col border-0"
-									type="number"
-									name="catering"
-									id="catering"
-									value="1"
-									placeholder="1-5"
-									min="1"
-									max="5"
-									required
-								/> -->
 							</label>
 						</div>
 
@@ -141,7 +130,6 @@
 									required
 								/>
 							</label>
-							<!-- value="2022-01-01" -->
 							<label class="col" for="checkout"
 								><span class="col text-nowrap">Search until:</span>
 								<input
@@ -151,7 +139,6 @@
 									name="checkout"
 									required
 								/>
-								<!-- value="2022-01-10" -->
 							</label>
 						</div>
 
@@ -161,8 +148,8 @@
 								id="search"
 								class="btn text-white mx-1 fw-bold bg-brand text-white col-10 col-lg rounded-3 p-0"
 							>
+								<!-- Search btn -->
 								<i class="bi bi-search" style="font-size: 25px"></i>
-								<!-- Search available venues -->
 							</button>
 
 							<button
@@ -172,7 +159,7 @@
 								data-bs-target="#settingsModal"
 								id="settingsBtn"
 							>
-								<!-- Settings  -->
+								<!-- Settings btn -->
 								<i class="bi bi-gear" style="font-size: 25px"></i>
 							</button>
 						</div>
@@ -182,7 +169,12 @@
 				<section
 					id="result"
 					class="justify-content-center px-0 position-relative bg-white p-3 px-4 shadow rounded"
-				></section>
+				>
+					<div class="mx-auto d-block mt-5" style="width: 200px">
+						<img src="./searching.svg" class="w-100" />
+						<p class="p-2 text-center">Waiting to search...</p>
+					</div>
+				</section>
 			</div>
 		</main>
 		<footer class="container-fluid"></footer>

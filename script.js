@@ -1,10 +1,10 @@
 let data;
 const sortby = { order: 'ASC', col: 'popularity_rank' };
 let displayMode = 'cards';
-let cardTemplate;
 const cateringDropDown = document.querySelector(`[aria-labelledby='catering']`);
 const cateringOptions = cateringDropDown.querySelectorAll('a');
 
+let cardTemplate;
 window.onload = () => {
 	cardTemplate = document.querySelector('template');
 };
@@ -498,7 +498,7 @@ async function getVenueDataAndRender() {
 	const results = document.getElementById('result');
 	results.innerHTML = createLoadingHTML() + results.innerHTML;
 
-	// If auto-update is enabled then set 10ms timeout before getting data to prevent bugs caued by DOM update duraation (get venue data depends on catering band drop down being updated)
+	// If auto-update is enabled then set 10ms timeout before getting data to prevent bugs caued by DOM update duration (get venue data depends on catering band drop down being updated)
 	setTimeout(
 		async () => {
 			const newData = await getVenueData();
