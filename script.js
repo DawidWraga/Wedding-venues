@@ -388,13 +388,20 @@ async function renderCards() {
 		//card footer book now btn
 		const bookNowBtn = cardHTML.querySelector('.bookNowBtn');
 
-		bookNowBtn.innerHTML += ` (${venue.available_days})`;
+		if (venue.available_days > 0) {
+			bookNowBtn.innerHTML += ` (${venue.available_days})`;
 
-		bookNowBtn.addEventListener('click', (ev) => {
-			const cardHTML = ev.target.parentNode;
-			const name = cardHTML.querySelector('.card-name').innerHTML;
-			changeBookingDetailsModal(name);
-		});
+			bookNowBtn.addEventListener('click', (ev) => {
+				const cardHTML = ev.target.parentNode;
+				const name = cardHTML.querySelector('.card-name').innerHTML;
+				changeBookingDetailsModal(name);
+			});
+		} else {
+			bookNowBtn.innerHTML = 'Fully booked';
+			bookNowBtn.removeAttribute('data-bs-toggle');
+			bookNowBtn.style.cursor = 'not-allowed';
+			bookNowBtn.classList.add('bg-secondary');
+		}
 
 		cardsContainerHTML.appendChild(cardHTML);
 	});
@@ -410,7 +417,7 @@ function renderTable(data) {
 	resultHTML.innerHTML = '';
 
 	const tableHTML = document.createElement('table');
-	tableHTML.classList.add('w-100');
+
 	data.forEach((venue, i) => {
 		// Create headers
 		if (i === 0) {
@@ -450,9 +457,16 @@ function renderTable(data) {
 				cellHTML.innerHTML += `<h6 class="my-auto">${cell}</h6>`;
 
 				// details btn
-				const btnHTML = createBookNowButton();
-				btnHTML.onclick = () => changeBookingDetailsModal(cell);
-				cellHTML.append(btnHTML);
+				const bookNowBtn = createBookNowButton();
+
+				if (venue.available_days > 0) {
+					bookNowBtn.onclick = () => changeBookingDetailsModal(cell);
+				} else {
+					bookNowBtn.removeAttribute('data-bs-toggle');
+					bookNowBtn.style.cursor = 'not-allowed';
+					bookNowBtn.classList.add('opacity-25');
+				}
+				cellHTML.append(bookNowBtn);
 
 				// DATA cols
 			} else {
